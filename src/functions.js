@@ -203,9 +203,6 @@ function generateQuestionObject(obj,arrayEntities){
     let objectRet = [];
     let objAux = {};
     obj.forEach(element => {
-        console.log("ELEMENTO SENDO GERADO")
-        console.log(element)
-        console.log(typeof element.tag)
         if(element.tag !== "" && element.sinonimo !== ""){
             objAux = {};
             objAux['entityTag'] = element.tag;
@@ -213,7 +210,6 @@ function generateQuestionObject(obj,arrayEntities){
             objAux[element.tag] = element.sinonimo.split(',');
             arrayEntities.push(objAux)
         }else{
-            console.log("ENTIDADE RECEBIDA É NULA")
             objAux = null;
         }
         objectRet.push({
@@ -236,8 +232,6 @@ function generateQuestion(obj, arrayDialog){
     let next_dialog_node = '';
     let entityControl = false;
     obj.forEach(element => {
-        console.log("CHEGOU QUESTION PARA SER GERADA");
-        console.log(element)
         nodeName = 'node'+i;
         nodeCount = nodeName+'_count';
         contextAux[nodeCount] = {};

@@ -27,15 +27,10 @@ async function executarUpdateDialog() {
 //começando a conversação com uma mensagem vazia
 //chatbot.message({workspace_id}, trataResposta);
 
-let fimDeConversar = false;
+// let fimDeConversar = false;
 let arrayDialog = [];
 let arrayEntities = [];
 
-const qsts = [
-    'Qual sua cor preferida?',
-    'Qua a marca do seu carro?',
-    'Você é solteiro?'
-];
 
 
 const entityGender = {
@@ -63,24 +58,6 @@ const entityOptin = {
     description: 'Entidade cores'
 }
 arrayEntities.push(entityOptin)
-
-// const entityColor = {
-//     entityTag: 'color',
-//     entities: ['color'],
-//     color: ['cinza', 'preto', 'branco', 'verde', 'vermelho', 'marrom', 'roxo', 'amarelo', 'laranja', 'rosa', 'azul'],
-//     description: 'Entidade cores'
-// }
-// arrayEntities.push(entityColor)
-
-// const entityCarBrand = {
-//     'entityTag': 'carBrand',
-//     'entities': ['carBrand'],
-//     'carBrand': ['ford','nissan','honda','hyundai','chevrolet','kia','renault','mercedes-benz',
-//                             'peugeot','bmw','audi','maruti','mazda','fiat','jeep','changan','geely','buick'],
-//     'description': 'Entidade Marcas de carros'
-// }
-// arrayEntities.push(entityCarBrand)
-
 
 const intentResp = {};
 intentResp.intentTag = 'responder';
@@ -111,9 +88,7 @@ intentRecusar.examples = [
 ];
 
 function createIntentsAndEntities(arrayEntities){
-    console.log("EXECUTOU CRIAÇÃO DE ENTIDADES")
     arrayEntities.forEach(element => {
-        console.log(element);
         fun.createNewEntity(
             element.entityTag,
             fun.generateEntity(element))
@@ -129,33 +104,10 @@ function createIntentsAndEntities(arrayEntities){
         fun.generateIntent(intentRecusar),
         intentRecusar.description)
 }
-const dialogObj = [
-    {
-        qst: qsts[0],
-        entity: arrayEntities[0]
-    },
-    {
-        qst: qsts[1],
-        entity: arrayEntities[1]
-    },
-    {
-        qst: qsts[2],
-        entity: null
-    }
-]
 
 let axuElement = fun.generateQuestionObject(objTest,arrayEntities);
 const dialogObj2 = axuElement[0];
 arrayEntities = axuElement[1];
-
-console.log("OBJETO RECEBIDO PELA FUNÇÃO")
-console.log(objTest)
-console.log("OBJETO GERADO NA FUNÇÃO")
-console.log(dialogObj);
-console.log(typeof dialogObj);
-console.log("OBJETO IMPORTADO PELA FUNÇÃO")
-console.log(dialogObj2)
-console.log(typeof dialogObj2)
 
 let CountArray = {};
 let contrCountArray = 0;
@@ -508,11 +460,6 @@ const dialog_end = fun.skillObject(
     'folder_qsts'
 )
 arrayDialog.push(dialog_end);
-
-console.log("ARRAY DE ENTIDADES");
-console.log(arrayEntities);
-console.log("ARRAY DE DIALOGOS");
-console.log(arrayDialog);
 
 createIntentsAndEntities(arrayEntities);
 
