@@ -1,3 +1,5 @@
+export function mainAppBack(objTest){
+
 const fun = require('./functions');
 
 function esperar() {
@@ -36,19 +38,23 @@ const qsts = [
 ];
 
 
-const entityGender = new Object();
-entityGender.entityTag = 'gender';
-entityGender.entities = ['homem','mulher']
-entityGender.homem = ['home', 'homem', 'homen', 'macho', 'cara', 'men', 'man','masc', 'masculino'];
-entityGender.mulher = ['mulher', 'muié', 'muie', 'fêmea', 'women', 'mulier', 'fem','femi','femino'];
-entityGender.description = 'Entidade Genero';
+const entityGender = {
+    'entityTag': 'gender',
+    'entities': ['homem','mulher'],
+    'homem': ['home', 'homem', 'homen', 'macho', 'cara', 'men', 'man','masc', 'masculino'],
+    'mulher': ['mulher', 'muié', 'muie', 'fêmea', 'women', 'mulier', 'fem','femi','femino'],
+    'description': 'Entidade Genero'
+}
+arrayEntities.push(entityGender)
 
-const entityResp = new Object();
-entityResp.entityTag = 'resposta';
-entityResp.entities = ['sim', 'nao'];
-entityResp.sim = ['sim', 'claro', 'posso', 'pode fazer', 'aceito', 'yes', 'go', 'partiu', 'vamos', 'bora'];
-entityResp.nao = ['não', 'agora não', 'não posso', 'depois', 'no', 'nope', 'nem'];
-entityResp.description = 'Entidade Resposta';
+const entityResp = {
+    'entityTag': 'resposta',
+    'entities': ['sim', 'nao'],
+    'sim': ['sim', 'claro', 'posso', 'pode fazer', 'aceito', 'yes', 'go', 'partiu', 'vamos', 'bora'],
+    'nao': ['não', 'agora não', 'não posso', 'depois', 'no', 'nope', 'nem'],
+    'description': 'Entidade Resposta'
+}
+arrayEntities.push(entityResp)
 
 const entityOptin = {
     entityTag: 'optin',
@@ -56,25 +62,27 @@ const entityOptin = {
     optin: ['sms','whats','whatsapp','app','tele','telegram','ligação','tel','fone','msg','zap','zapzap','face','facebook','twitter','tuiti','insta','instagram'],
     description: 'Entidade cores'
 }
+arrayEntities.push(entityOptin)
 
-const entityColor = {
-    entityTag: 'color',
-    entities: ['color'],
-    color: ['cinza', 'preto', 'branco', 'verde', 'vermelho', 'marrom', 'roxo', 'amarelo', 'laranja', 'rosa', 'azul'],
-    description: 'Entidade cores'
-}
-arrayEntities.push(entityColor)
+// const entityColor = {
+//     entityTag: 'color',
+//     entities: ['color'],
+//     color: ['cinza', 'preto', 'branco', 'verde', 'vermelho', 'marrom', 'roxo', 'amarelo', 'laranja', 'rosa', 'azul'],
+//     description: 'Entidade cores'
+// }
+// arrayEntities.push(entityColor)
 
-const entityCarBrand = new Object();
-entityCarBrand.entityTag = 'carBrand';
-entityCarBrand.entities = ['carBrand'];
-entityCarBrand.carBrand = ['ford','nissan','honda','hyundai','chevrolet','kia','renault','mercedes-benz',
-                            'peugeot','bmw','audi','maruti','mazda','fiat','jeep','changan','geely','buick'];
-entityCarBrand.description = 'Entidade Marcas de carros';
-arrayEntities.push(entityCarBrand)
+// const entityCarBrand = {
+//     'entityTag': 'carBrand',
+//     'entities': ['carBrand'],
+//     'carBrand': ['ford','nissan','honda','hyundai','chevrolet','kia','renault','mercedes-benz',
+//                             'peugeot','bmw','audi','maruti','mazda','fiat','jeep','changan','geely','buick'],
+//     'description': 'Entidade Marcas de carros'
+// }
+// arrayEntities.push(entityCarBrand)
 
 
-const intentResp = new Object();
+const intentResp = {};
 intentResp.intentTag = 'responder';
 intentResp.description = 'Intenção de responder a pesquisa';
 intentResp.examples = [
@@ -87,7 +95,7 @@ intentResp.examples = [
     'Sim',
     'Claro'];
 
-const intentRecusar = new Object();
+const intentRecusar = {};
 intentRecusar.intentTag = 'recusar';
 intentRecusar.description = 'Intenção de recusar responder a pesquisa';
 intentRecusar.examples = [
@@ -102,32 +110,14 @@ intentRecusar.examples = [
     "Não me incomode mais"
 ];
 
-function createIntentsAndEntities(){
-
-    fun.createNewEntity(
-        entityCarBrand.entityTag,
-        fun.generateEntity(entityCarBrand),
-        entityCarBrand.description)
-
-    fun.createNewEntity(
-        entityGender.entityTag,
-        fun.generateEntity(entityGender),
-        entityGender.description)
-
-    fun.createNewEntity(
-        entityResp.entityTag,
-        fun.generateEntity(entityResp),
-        entityResp.description)
-
-    fun.createNewEntity(
-        entityColor.entityTag,
-        fun.generateEntity(entityColor),
-        entityColor.description)
-
-    fun.createNewEntity(
-        entityOptin.entityTag,
-        fun.generateEntity(entityOptin),
-        entityOptin.description)
+function createIntentsAndEntities(arrayEntities){
+    console.log("EXECUTOU CRIAÇÃO DE ENTIDADES")
+    arrayEntities.forEach(element => {
+        console.log(element);
+        fun.createNewEntity(
+            element.entityTag,
+            fun.generateEntity(element))
+    });
 
     fun.createNewIntent(
         intentResp.intentTag,
@@ -139,25 +129,37 @@ function createIntentsAndEntities(){
         fun.generateIntent(intentRecusar),
         intentRecusar.description)
 }
-
-dialogObj = [
-    dialog1 = {
+const dialogObj = [
+    {
         qst: qsts[0],
         entity: arrayEntities[0]
     },
-    dialog2 = {
+    {
         qst: qsts[1],
         entity: arrayEntities[1]
     },
-    dialog3 = {
+    {
         qst: qsts[2],
         entity: null
     }
 ]
 
+let axuElement = fun.generateQuestionObject(objTest,arrayEntities);
+const dialogObj2 = axuElement[0];
+arrayEntities = axuElement[1];
+
+console.log("OBJETO RECEBIDO PELA FUNÇÃO")
+console.log(objTest)
+console.log("OBJETO GERADO NA FUNÇÃO")
+console.log(dialogObj);
+console.log(typeof dialogObj);
+console.log("OBJETO IMPORTADO PELA FUNÇÃO")
+console.log(dialogObj2)
+console.log(typeof dialogObj2)
+
 let CountArray = {};
 let contrCountArray = 0;
-dialogObj.forEach(element => {
+dialogObj2.forEach(element => {
     CountArray['node'+contrCountArray+'_count'] = 0;
     contrCountArray++;
 });
@@ -481,7 +483,8 @@ const dialog_final_default = fun.skillObject(
 
 )
 arrayDialog.push(dialog_final_default);
-arrayDialog = fun.generateQuestion(dialogObj,arrayDialog)
+
+arrayDialog = fun.generateQuestion(dialogObj2,arrayDialog)
 
 //Dialog End
 const dialog_end = fun.skillObject(
@@ -506,10 +509,14 @@ const dialog_end = fun.skillObject(
 )
 arrayDialog.push(dialog_end);
 
-createIntentsAndEntities();
+console.log("ARRAY DE ENTIDADES");
+console.log(arrayEntities);
+console.log("ARRAY DE DIALOGOS");
+console.log(arrayDialog);
 
-// executarCreatDialog().then(
-// executarUpdateDialog);
+createIntentsAndEntities(arrayEntities);
 
-// executarUpdateDialog();
+executarCreatDialog().then(
+executarUpdateDialog);
 
+}

@@ -46,7 +46,6 @@ class ChatMensagem extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    console.log("EXECUTOU DE ALEGRE")
     return {
         enviaTexto: (msg) => dispatch(enviaMensagem(msg)),
         conversaWatson: (msg, contexto) => dispatch(conversaWatson(msg, contexto))
@@ -54,7 +53,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
         resposta: state.watson.respostas
     }

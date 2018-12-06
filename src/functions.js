@@ -2,12 +2,19 @@ let prompt = require('prompt-sync')();
 require('dotenv').config();
 let watson = require('watson-developer-cloud/assistant/v1');
 
+
+// let chatbot = new watson({
+//     username: process.env.REACT_APP_USERNAME_WATSON,
+//     password: process.env.REACT_APP_PASSWORD,
+//     version: process.env.REACT_APP_VERSION,
+// });
 let chatbot = new watson({
-    username: process.env.USERNAME_WATSON,
-    password: process.env.PASSWORD,
-    version: process.env.VERSION,
+    username: 'a434b24b-056b-4676-9e6c-5362ac72fedb',
+    password: 'zHP7iLqeWquI',
+    version: '2018-02-16',
 });
-let workspace_id = process.env.WORKSPACE_ID;
+let workspace_id = '45a2b1dc-926f-42c4-adf9-fadd44c571d9';
+// let workspace_id = process.env.WORKSPACE_ID;
 
 let fimDeConversar = false;
 
@@ -59,13 +66,12 @@ function createNewIntent( intent, examples, description) {
     });
 };
 
-function createNewEntity( entity, values,description) {
+function createNewEntity( entity, values) {
     let params = {
         workspace_id,
         entity,
         values,
-        fuzzy_match: true,
-        description
+        fuzzy_match: true
     };
         
     chatbot.createEntity(params, function (err, response) {
@@ -85,7 +91,7 @@ function trataResposta(err, resposta) {
 
     if (resposta.intents.length) {
         console.log('Eu detectei a inteção: ' + resposta.intents[0].intent);
-        if (resposta.intents[0].intent == 'General_Ending') {
+        if (resposta.intents[0].intent === 'General_Ending') {
             fimDeConversar = true;
         }
     }
@@ -145,7 +151,7 @@ function skillObject(
     actions,
     user_label
 ) {
-    let obj = new Object();
+    let obj = {};
     obj.workspace_id = workspace_id;
     obj.dialog_node = dialog_node;
     obj.new_conditions = conditions;
@@ -169,7 +175,7 @@ function skillObject(
 }
 
 function createNewDialog(obj) {
-    const obj2 = new Object();
+    const obj2 = {};
     obj2.workspace_id = obj.workspace_id;
     obj2.dialog_node = obj.dialog_node;
     obj2.title = obj.new_title;
@@ -193,6 +199,31 @@ function updateDialog(obj) {
     });
 }
 
+function generateQuestionObject(obj,arrayEntities){
+    let objectRet = [];
+    let objAux = {};
+    obj.forEach(element => {
+        console.log("ELEMENTO SENDO GERADO")
+        console.log(element)
+        console.log(typeof element.tag)
+        if(element.tag !== "" && element.sinonimo !== ""){
+            objAux = {};
+            objAux['entityTag'] = element.tag;
+            objAux['entities'] = [element.tag];
+            objAux[element.tag] = element.sinonimo.split(',');
+            arrayEntities.push(objAux)
+        }else{
+            console.log("ENTIDADE RECEBIDA É NULA")
+            objAux = null;
+        }
+        objectRet.push({
+            qst: element.frase,
+            entity: objAux
+        });
+    });
+    return [objectRet,arrayEntities];
+}
+
 
 function generateQuestion(obj, arrayDialog){
     const parent = 'folder_qsts';
@@ -205,6 +236,8 @@ function generateQuestion(obj, arrayDialog){
     let next_dialog_node = '';
     let entityControl = false;
     obj.forEach(element => {
+        console.log("CHEGOU QUESTION PARA SER GERADA");
+        console.log(element)
         nodeName = 'node'+i;
         nodeCount = nodeName+'_count';
         contextAux[nodeCount] = {};
@@ -227,7 +260,6 @@ function generateQuestion(obj, arrayDialog){
         if(entityControl)
         {   
             arrayDialog.push(skillObject(
-                workspace_id,
                 nodeName,
                 'true',
                 {
@@ -246,7 +278,6 @@ function generateQuestion(obj, arrayDialog){
                 previous_sibling
             ));
             arrayDialog.push(skillObject(
-                workspace_id,
                 nodeName+1,
                 '@'+varEntity,
                 {
@@ -271,7 +302,6 @@ function generateQuestion(obj, arrayDialog){
             ));
             contextAux[nodeCount] = "<?$" + nodeCount + "+1?>";
             arrayDialog.push(skillObject(
-                workspace_id,
                 nodeName+2,
                 "anything_else&&"+nodeCount+"<2",
                 {
@@ -294,7 +324,6 @@ function generateQuestion(obj, arrayDialog){
             ));
             contextAux[nodeCount] = "<? input.text ?>";
             arrayDialog.push(skillObject(
-                workspace_id,
                 nodeName+3,
                 'anything_else',
                 {
@@ -317,7 +346,6 @@ function generateQuestion(obj, arrayDialog){
             ));
         }else{
             arrayDialog.push(skillObject(
-                workspace_id,
                 nodeName,
                 'true',
                 {
@@ -336,7 +364,6 @@ function generateQuestion(obj, arrayDialog){
                 previous_sibling
             ));
             arrayDialog.push(skillObject(
-                workspace_id,
                 nodeName+1,
                 '@resposta',
                 {
@@ -361,7 +388,6 @@ function generateQuestion(obj, arrayDialog){
             ));
             contextAux[nodeCount] = "<?$" + nodeCount + "+1?>";
             arrayDialog.push(skillObject(
-                workspace_id,
                 nodeName+2,
                 "anything_else&&"+nodeCount+"<2",
                 {
@@ -386,7 +412,6 @@ function generateQuestion(obj, arrayDialog){
             ));
             contextAux[nodeCount] = "<? input.text ?>";
             arrayDialog.push(skillObject(
-                workspace_id,
                 nodeName+3,
                 'anything_else',
                 {
@@ -432,5 +457,6 @@ module.exports = {
     skillObject,
     updateDialog,
     generateQuestion,
+    generateQuestionObject,
     workspace_id
 }

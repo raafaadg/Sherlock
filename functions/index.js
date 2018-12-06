@@ -5,9 +5,9 @@ require('dotenv').config()
 const cors = require('cors')({ origin: true })
 
 const chatbot = new watson({
-    username: process.env.USERNAME_WATSON,
-    password: process.env.PASSW0RD,
-    version: process.env.VERSION,
+    username: process.env.REACT_APP_USERNAME_WATSON,
+    password: process.env.REACT_APP_PASSWORD,
+    version: process.env.REACT_APP_VERSION,
 });
 
 const workspace_id = process.env.WORKSPACE_ID;
