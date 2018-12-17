@@ -5,7 +5,7 @@ const fun = require('./functions');
 function esperar() {
     return new Promise(
         (resolve, reject) => {
-            setTimeout(resolve, 2500);
+            setTimeout(resolve, 3500);
         }
     )
 }

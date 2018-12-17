@@ -234,7 +234,7 @@ function generateQuestion(obj, arrayDialog){
     obj.forEach(element => {
         nodeName = 'node'+i;
         nodeCount = nodeName+'_count';
-        contextAux[nodeCount] = {};
+        contextAux = {};
         if(element.entity != null)
         {
             entityControl = true;
@@ -271,6 +271,8 @@ function generateQuestion(obj, arrayDialog){
                 undefined,
                 previous_sibling
             ));
+            contextAux = {};
+            contextAux[varEntity] = '@'+varEntity+'.literal';
             arrayDialog.push(skillObject(
                 nodeName+1,
                 '@'+varEntity,
@@ -290,10 +292,9 @@ function generateQuestion(obj, arrayDialog){
                     dialog_node: next_dialog_node
                 },
                 undefined,
-                {
-                    varEntity: '@'+varEntity+'.literal'
-                }
+                contextAux
             ));
+            contextAux = {};
             contextAux[nodeCount] = "<?$" + nodeCount + "+1?>";
             arrayDialog.push(skillObject(
                 nodeName+2,
@@ -314,8 +315,9 @@ function generateQuestion(obj, arrayDialog){
                     dialog_node: nodeName
                 },
                 nodeName+1,
-                contextAux                
+                contextAux               
             ));
+            contextAux = {};
             contextAux[nodeCount] = "<? input.text ?>";
             arrayDialog.push(skillObject(
                 nodeName+3,
@@ -357,6 +359,8 @@ function generateQuestion(obj, arrayDialog){
                 undefined,
                 previous_sibling
             ));
+            contextAux = {};
+            contextAux["bool_"+nodeName] = '@resposta.literal';
             arrayDialog.push(skillObject(
                 nodeName+1,
                 '@resposta',
@@ -367,7 +371,7 @@ function generateQuestion(obj, arrayDialog){
                         ]
                     }
                 },
-                'If Get Yes',
+                'If Get',
                 'Dialogo para verificar se a resposta foi positiva',
                 nodeName,
                 {
@@ -376,10 +380,9 @@ function generateQuestion(obj, arrayDialog){
                     dialog_node: next_dialog_node
                 },
                 undefined,
-                {
-                    varEntity: '@resposta.literal'
-                }
+                contextAux
             ));
+            contextAux = {};
             contextAux[nodeCount] = "<?$" + nodeCount + "+1?>";
             arrayDialog.push(skillObject(
                 nodeName+2,
@@ -400,10 +403,9 @@ function generateQuestion(obj, arrayDialog){
                     dialog_node: nodeName
                 },
                 nodeName+1,
-                {
-                    nodeCount: "<?$" + nodeCount + "+1?>"
-                }
+                contextAux
             ));
+            contextAux = {};
             contextAux[nodeCount] = "<? input.text ?>";
             arrayDialog.push(skillObject(
                 nodeName+3,
@@ -424,10 +426,7 @@ function generateQuestion(obj, arrayDialog){
                     dialog_node: next_dialog_node
                 },
                 nodeName+2,
-                {
-                    nodeCount: "<? input.text ?>"
-                }
-
+                contextAux
             ));
         }
         previous_sibling = nodeName;
@@ -435,8 +434,6 @@ function generateQuestion(obj, arrayDialog){
     });
     return arrayDialog
 }
-
-
 
 module.exports = {
     chatbot,
